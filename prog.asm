@@ -10,6 +10,8 @@ CUR_SC_LN_2 EQU 0x22
 CUR_SC_RES EQU 0x23
 
 main:
+call preGameLoop
+
 mov DISP1+0, #01111101b
 mov DISP1+1, #11011111b
 mov DISP1+2, #11010111b
@@ -156,6 +158,112 @@ setb CUR_SC_RES.1
 ret
 calculatePixel_res_1:
 clr CUR_SC_RES.1
+ret
+
+
+
+preGameLoop:
+mov r5, #0 ; X
+mov r4, #0 ; Y
+button_wait_loop:
+mov P3, #0xFF
+mov a, r5
+mov r1, a
+call draw_num
+mov P3, #00000010b
+mov P3, #0xFF
+mov a, r4
+mov r1, a
+call draw_num
+mov P3, #00000001b
+
+MOV a, P3
+ANL a, #01000000b
+jnz button_wait_loop_start
+
+MOV a, P3
+ANL a, #00100000b
+jz button_wait_loop_swap
+
+MOV a, P3
+ANL a, #00010000b
+jz button_wait_loop_right
+
+MOV a, P3
+ANL a, #00001000b
+jz button_wait_loop_left
+
+MOV a, P3
+ANL a, #00000100b
+jz button_wait_loop_down
+
+MOV a, P3
+ANL a, #00000010b
+jz button_wait_loop_up
+
+jmp button_wait_loop
+button_wait_loop_right:
+
+button_wait_loop_left:
+
+button_wait_loop_down:
+
+button_wait_loop_up:
+
+button_wait_loop_swap:
+
+button_wait_loop_start:
+ret
+
+
+
+draw_num:
+; r0: num
+mov a, r0
+jnz draw_num_1
+mov P2, #11000000b
+ret
+draw_num_1:
+dec a
+jnz draw_num_2
+mov P2, #11111001b
+draw_num_2:
+dec a
+jnz draw_num_3
+mov P2, #10100100b
+ret
+draw_num_3:
+dec a
+jnz draw_num_4
+mov P2, #10110000b
+ret
+draw_num_4:
+dec a
+jnz draw_num_5
+mov P2, #10011001b
+ret
+draw_num_5:
+dec a
+jnz draw_num_6
+mov P2, #10010010b
+ret
+draw_num_6:
+dec a
+jnz draw_num_7
+mov P2, #10000010b
+ret
+draw_num_7:
+dec a
+jnz draw_num_8
+mov P2, #11111000b
+ret
+draw_num_8:
+dec a
+jnz draw_num_9
+mov P2, #10000000b
+ret
+draw_num_9:
+mov P2, #10010000b
 ret
 
 
