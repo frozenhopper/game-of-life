@@ -165,53 +165,62 @@ ret
 preGameLoop:
 mov r5, #0 ; X
 mov r4, #0 ; Y
+;mov P3, #0x00
 button_wait_loop:
-mov P3, #0xFF
+mov P3, #11111111b
 mov a, r5
-mov r1, a
+mov r0, a
 call draw_num
-mov P3, #00000010b
-mov P3, #0xFF
+mov P3, #11111101b
+mov P3, #11111111b
 mov a, r4
-mov r1, a
+mov r0, a
 call draw_num
-mov P3, #00000001b
+mov P3, #11111110b
+mov P3, #11111111b
+mov R7, #0x40
+call drawScreen
+
+MOV a, P3
+ANL a, #10000000b
+jz button_wait_loop_start
 
 MOV a, P3
 ANL a, #01000000b
-jnz button_wait_loop_start
-
-MOV a, P3
-ANL a, #00100000b
 jz button_wait_loop_swap
 
 MOV a, P3
-ANL a, #00010000b
+ANL a, #00100000b
 jz button_wait_loop_right
 
 MOV a, P3
-ANL a, #00001000b
+ANL a, #00010000b
 jz button_wait_loop_left
 
 MOV a, P3
-ANL a, #00000100b
+ANL a, #00001000b
 jz button_wait_loop_down
 
 MOV a, P3
-ANL a, #00000010b
+ANL a, #00000100b
 jz button_wait_loop_up
 
 jmp button_wait_loop
 button_wait_loop_right:
-
+inc r5
+jmp button_wait_loop
 button_wait_loop_left:
-
+dec r5
+jmp button_wait_loop
 button_wait_loop_down:
-
+dec r4
+jmp button_wait_loop
 button_wait_loop_up:
-
+inc r4
+jmp button_wait_loop
 button_wait_loop_swap:
 
+jmp button_wait_loop
 button_wait_loop_start:
 ret
 
@@ -227,6 +236,7 @@ draw_num_1:
 dec a
 jnz draw_num_2
 mov P2, #11111001b
+ret
 draw_num_2:
 dec a
 jnz draw_num_3
