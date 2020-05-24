@@ -50,7 +50,7 @@ rlc A
 xch A, R2
 jnc drawScreen_loop_0
 ret
-
+ 
 doGameOfLifeStep:
 ; R7: CURRENT SCREEN
 ; R6: NEXT SCREEN
@@ -164,7 +164,7 @@ ret
 
 preGameLoop:
 mov r5, #0 ; X
-mov r4, #0 ; Y
+mov r4, #7 ; Y
 ;mov P3, #0x00
 button_wait_loop:
 mov P3, #11111111b
@@ -207,21 +207,58 @@ jz button_wait_loop_up
 
 jmp button_wait_loop
 button_wait_loop_right:
+mov a, r5
+clr C
+subb a, #7
+jz button_wait_loop
 inc r5
 jmp button_wait_loop
 button_wait_loop_left:
+mov a, r5
+jz button_wait_loop
 dec r5
 jmp button_wait_loop
 button_wait_loop_down:
+mov a, r4
+jz button_wait_loop
 dec r4
 jmp button_wait_loop
 button_wait_loop_up:
+mov a, r4
+clr C
+subb a, #7
+jz button_wait_loop
 inc r4
 jmp button_wait_loop
 button_wait_loop_swap:
-
+mov r0, #0x40
+call switchBit
 jmp button_wait_loop
 button_wait_loop_start:
+ret
+
+
+switchBit:
+; R5: x
+; R4: y
+; R0: Screen
+mov b, #10000000b
+mov a, R5
+switchBit_loop_beg:
+jz switchBit_loop_end
+xch a, b
+rr a
+xch a, b
+dec a
+jmp switchBit_loop_beg
+
+switchBit_loop_end:
+mov a, r0
+add a, r4
+mov r0, a
+mov a, @r0
+XRL a, b
+mov @R0, a
 ret
 
 
