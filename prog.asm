@@ -19,19 +19,19 @@ mov DISP1+4, #0xFF
 mov DISP1+5, #0xFF
 mov DISP1+6, #0xFF
 mov DISP1+7, #0xFF
-call preGameLoop
+;call preGameLoop
 
-;mov DISP1+0, #01111101b
-;mov DISP1+1, #11011111b
-;mov DISP1+2, #11010111b
-;mov DISP1+3, #01111110b
-;mov DISP1+4, #11010111b
-;mov DISP1+5, #01110111b
-;mov DISP1+6, #11101011b
-;mov DISP1+7, #10111110b
+mov DISP1+0, #11111111b
+mov DISP1+1, #11111111b
+mov DISP1+2, #11111000b
+mov DISP1+3, #11111111b
+mov DISP1+4, #11111111b
+mov DISP1+5, #11111111b
+mov DISP1+6, #11111111b
+mov DISP1+7, #11111111b
 mov R7, #0x40
 mov R6, #0x48
-call drawScreen
+;call drawScreen
 
 main_loop:
 call doGameOfLifeStep
@@ -167,18 +167,27 @@ JNB CUR_SC_LN_2.2, calculatePixel_j7
 inc A
 calculatePixel_j7:
 ; count pixels
+
+mov B, #0
+JNB CUR_SC_LN_1.1, calculatePixel_j8
+mov B, #1
+
+calculatePixel_j8:
 CLR C
 SUBB A, #5
 JZ calculatePixel_res_1
 DEC A
-JZ calculatePixel_res_1
+JZ calculatePixel_res_2
 setb CUR_SC_RES.1
 ret
 calculatePixel_res_1:
 clr CUR_SC_RES.1
 ret
-
-
+calculatePixel_res_2:
+mov a, b
+jz calculatePixel_res_1
+setb CUR_SC_RES.1
+ret
 
 preGameLoop:
 mov r5, #0 ; X
