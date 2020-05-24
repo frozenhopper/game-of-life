@@ -10,27 +10,45 @@ CUR_SC_LN_2 EQU 0x22
 CUR_SC_RES EQU 0x23
 
 main:
+
+mov DISP1+0, #0xFF
+mov DISP1+1, #0xFF
+mov DISP1+2, #0xFF
+mov DISP1+3, #0xFF
+mov DISP1+4, #0xFF
+mov DISP1+5, #0xFF
+mov DISP1+6, #0xFF
+mov DISP1+7, #0xFF
 call preGameLoop
 
-mov DISP1+0, #01111101b
-mov DISP1+1, #11011111b
-mov DISP1+2, #11010111b
-mov DISP1+3, #01111110b
-mov DISP1+4, #11010111b
-mov DISP1+5, #01110111b
-mov DISP1+6, #11101011b
-mov DISP1+7, #10111110b
-
-mov R7, #0x40
-call drawScreen
-
+;mov DISP1+0, #01111101b
+;mov DISP1+1, #11011111b
+;mov DISP1+2, #11010111b
+;mov DISP1+3, #01111110b
+;mov DISP1+4, #11010111b
+;mov DISP1+5, #01110111b
+;mov DISP1+6, #11101011b
+;mov DISP1+7, #10111110b
 mov R7, #0x40
 mov R6, #0x48
-call doGameOfLifeStep
-
-mov R7, #0x48
 call drawScreen
-jmp end
+
+main_loop:
+call doGameOfLifeStep
+mov A, R7
+xch A, R6
+mov R7, A
+
+main_loop_input_loop:
+call drawScreen
+
+MOV a, P3
+ANL a, #10000000b
+jz main_loop
+
+jmp main_loop_input_loop
+
+
 
 drawScreen:
 ; R7: MEMORY OF SCREEN TO DRAW
@@ -164,7 +182,7 @@ ret
 
 preGameLoop:
 mov r5, #0 ; X
-mov r4, #7 ; Y
+mov r4, #0 ; Y
 ;mov P3, #0x00
 button_wait_loop:
 mov P3, #11111111b
@@ -235,6 +253,8 @@ mov r0, #0x40
 call switchBit
 jmp button_wait_loop
 button_wait_loop_start:
+mov P2, #10111111b
+mov P3, #11111100b
 ret
 
 
