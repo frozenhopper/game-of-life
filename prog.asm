@@ -19,19 +19,11 @@ mov DISP1+4, #0xFF
 mov DISP1+5, #0xFF
 mov DISP1+6, #0xFF
 mov DISP1+7, #0xFF
-;call preGameLoop
+call preGameLoop
 
-mov DISP1+0, #11111111b
-mov DISP1+1, #11111111b
-mov DISP1+2, #11111000b
-mov DISP1+3, #11111111b
-mov DISP1+4, #11111111b
-mov DISP1+5, #11111111b
-mov DISP1+6, #11111111b
-mov DISP1+7, #11111111b
 mov R7, #0x40
 mov R6, #0x48
-;call drawScreen
+call drawScreen
 
 main_loop:
 call doGameOfLifeStep
